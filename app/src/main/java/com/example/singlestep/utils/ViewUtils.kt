@@ -81,3 +81,29 @@ fun convertToTitleCase(input: String): String {
     return input.lowercase().split(" ")
         .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
 }
+fun getRemoveTripOnClickListener(
+    context: Context,
+    onPositiveButtonClicked: () -> Unit
+): View.OnClickListener {
+    return View.OnClickListener {
+        val builder = AlertDialog.Builder(context)
+
+        builder.setTitle("Remove from My Trips")
+            .setMessage("Are you sure you want to continue? This action cannot be undone.")
+
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            onPositiveButtonClicked()
+            Toast.makeText(
+                context,
+                "Successfully removed from My Trips",
+                Toast.LENGTH_SHORT
+            ).show()
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+}
