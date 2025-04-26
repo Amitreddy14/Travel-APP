@@ -178,3 +178,45 @@ class SummaryFragment : Fragment() {
             }
         })
     }
+
+    private fun setupCityImage(tripParameters: TripParameters) {
+        val photoUrl = tripParameters.destination.imageUrl
+        if (photoUrl != null) {
+            Glide.with(binding.root.context).load(photoUrl).into(binding.cityImageView)
+        } else {
+            val photoMetadata = tripParameters.destination.photoMetadata
+            val imageFileUri = tripParameters.destination.imageFileUri
+            if (imageFileUri != null) {
+                binding.cityImageView.setImageBitmap(
+                    loadBitmapFromFile(
+                        requireContext(),
+                        imageFileUri
+                    )
+                )
+            } else if (photoMetadata != null) {
+                val placesClient = Places.createClient(binding.root.context)
+                val photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(500)
+                    .setMaxHeight(250)
+                    .build()
+                placesClient.fetchPhoto(photoRequest)
+                    .addOnSuccessListener { fetchPhotoResponse: FetchPhotoResponse ->
+                        val bitmap = fetchPhotoResponse.bitmap
+                        binding.cityImageView.setImageBitmap(bitmap)
+                        val file = saveBitmapToFile(requireContext(), bitmap)
+                        tripParameters.destination.imageFileUri = file?.absolutePath
+                    }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        hideBottomNavigationBar(activity)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        showBottomNavigationBar(activity)
+    }
+}
