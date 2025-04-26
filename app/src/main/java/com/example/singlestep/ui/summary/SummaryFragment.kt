@@ -31,3 +31,34 @@ import com.example.singlestep.utils.showBottomNavigationBar
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPhotoResponse
+
+class SummaryFragment : Fragment() {
+
+    private val viewModel: SummaryViewModel by viewModels()
+    private lateinit var binding: FragmentSummaryBinding
+    private lateinit var flightAdapter: FlightAdapter
+    private lateinit var hotelAdapter: HotelAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSummaryBinding.inflate(inflater, container, false)
+        arguments?.let { bundle ->
+            val args = SummaryFragmentArgs.fromBundle(bundle)
+            val tripSummary = args.tripSummary
+            val fromMyTrips = args.fromMyTrips
+            setupObservers(tripSummary)
+            setupViews(tripSummary, fromMyTrips)
+        }
+        return binding.root
+    }
+
+    private fun setupObservers(tripSummary: TripSummary) {
+        viewModel.itineraryString.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                Result.Loading -> onItineraryLoading()
+                is Result.Failure -> onItineraryLoadingFailure(result, tripSummary)
+                is Result.Success -> onItineraryLoadingSuccess(result.value, tripSummary)
+            }
+        }
+    }
