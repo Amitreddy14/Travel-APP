@@ -26,3 +26,23 @@ client = instructor.patch(oai_client, mode=instructor.Mode.JSON)
 
 def get_client():
     return client
+
+# Handler to build prompt, call GPT, and create the response
+def get_itinerary(
+    location: str,
+    arrival_time: str,
+    departure_time: str,
+    hotel_address: str,
+    budget: float,
+) -> Itinerary:
+    prompt = get_itinerary_prompt(
+        location, arrival_time, departure_time, hotel_address, budget
+    )
+    if debug:
+        print(prompt.get_prettified_str())
+    resp = client.chat.completions.create(
+        model=MODEL, response_model=Itinerary, messages=prompt.get_messages()
+    )
+    if debug:
+        print("GPT RESPONSE: ", resp)
+    return resp
