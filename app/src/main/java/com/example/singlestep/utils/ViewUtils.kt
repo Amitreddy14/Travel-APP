@@ -49,3 +49,35 @@ fun setupPlacesAutocompleteFragment(
         this.setHint(hint)
     }
 }
+
+fun getAutocompleteFragmentClearButton(fragment: AutocompleteSupportFragment): View? {
+    return fragment.view?.findViewById(com.google.android.libraries.places.R.id.places_autocomplete_clear_button)
+}
+
+fun startGoogleMapsNavigation(context: Context, lat: Double, long: Double) {
+    val navigationIntentUri = Uri.parse("google.navigation:q=$lat,$long")
+    val mapIntent = Intent(Intent.ACTION_VIEW, navigationIntentUri)
+    mapIntent.setPackage("com.google.android.apps.maps")
+    context.startActivity(mapIntent)
+}
+
+fun startWebView(context: Context, link: String?) {
+    val intent = Intent(Intent.ACTION_VIEW)
+    intent.setData(Uri.parse(link))
+    context.startActivity(intent)
+}
+
+fun hideBottomNavigationBar(activity: Activity?) {
+    activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
+        View.GONE
+}
+
+fun showBottomNavigationBar(activity: Activity?) {
+    activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation_view)?.visibility =
+        View.VISIBLE
+}
+
+fun convertToTitleCase(input: String): String {
+    return input.lowercase().split(" ")
+        .joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } }
+}
