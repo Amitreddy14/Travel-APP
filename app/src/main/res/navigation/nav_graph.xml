@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/searchNav">
+
+    <navigation
+        android:id="@+id/searchNav"
+        app:startDestination="@id/searchFragment">
+
+        <fragment
+            android:id="@+id/searchFragment"
+            android:name="com.example.singlestep.ui.search.SearchFragment"
+            android:label="fragment_search"
+            tools:layout="@layout/fragment_search">
+            <action
+                android:id="@+id/action_searchFragment_to_flightFragment"
+                app:destination="@id/flightFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/flightFragment"
+            android:name="com.example.singlestep.ui.flights.FlightFragment"
+            android:label="fragment_flight"
+            tools:layout="@layout/fragment_flight">
+            <argument
+                android:name="tripParameters"
+                app:argType="com.example.singlestep.model.TripParameters" />
+            <action
+                android:id="@+id/action_flightFragment_to_hotelFragment"
+                app:destination="@id/hotelFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/hotelFragment"
+            android:name="com.example.singlestep.ui.hotels.HotelFragment"
+            android:label="fragment_hotel"
+            tools:layout="@layout/fragment_hotel">
+            <argument
+                android:name="tripParameters"
+                app:argType="com.example.singlestep.model.TripParameters" />
+            <argument
+                android:name="flight"
+                app:argType="com.example.singlestep.model.Flight" />
+            <argument
+                android:name="airlineName"
+                app:argType="string" />
+            <argument
+                android:name="airlineICAOCode"
+                app:argType="string" />
+            <action
+                android:id="@+id/action_hotelFragment_to_summaryFragment"
+                app:destination="@id/summaryFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/summaryFragment"
+            android:name="com.example.singlestep.ui.summary.SummaryFragment"
+            android:label="fragment_summary"
+            tools:layout="@layout/fragment_summary">
+            <argument
+                android:name="tripSummary"
+                app:argType="com.example.singlestep.model.TripSummary" />
+            <argument
+                android:name="fromMyTrips"
+                android:defaultValue="false"
+                app:argType="boolean" />
+            <action
+                android:id="@+id/action_summaryFragment_to_searchFragment"
+                app:destination="@id/searchFragment"
+                app:popUpTo="@id/searchNav"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_summaryFragment_to_myTripsFragment"
+                app:destination="@id/myTripsFragment"
+                app:popUpTo="@id/myTripsNav"
+                app:popUpToInclusive="true" />
+        </fragment>
+
+    </navigation>
+
+    <!-- Definitions for ExploreFragment and TripsFragment remain unchanged -->
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.singlestep.ui.explore.ExploreFragment"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" />
+
+    <navigation
+        android:id="@+id/myTripsNav"
+        app:startDestination="@id/myTripsFragment">
+
+        <fragment
+            android:id="@+id/myTripsFragment"
+            android:name="com.example.singlestep.ui.mytrips.MyTripsFragment"
+            android:label="fragment_trips"
+            tools:layout="@layout/fragment_my_trips">
+            <action
+                android:id="@+id/action_myTripsFragment_to_summaryFragment"
+                app:destination="@id/summaryFragment" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/summaryFragment"
+            android:name="com.example.singlestep.ui.summary.SummaryFragment"
+            android:label="fragment_summary"
+            tools:layout="@layout/fragment_summary">
+            <argument
+                android:name="tripSummary"
+                app:argType="com.example.singlestep.model.TripSummary" />
+            <argument
+                android:name="fromMyTrips"
+                android:defaultValue="false"
+                app:argType="boolean" />
+            <action
+                android:id="@+id/action_summaryFragment_to_searchFragment"
+                app:destination="@id/searchFragment"
+                app:popUpTo="@id/searchNav"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_summaryFragment_to_myTripsFragment"
+                app:destination="@id/myTripsFragment"
+                app:popUpTo="@id/myTripsNav"
+                app:popUpToInclusive="true" />
+        </fragment>
+
+    </navigation>
+
+</navigation>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/searchNav"
+        android:icon="@drawable/icon_search"
+        android:title="@string/search" />
+
+    <item
+        android:id="@+id/exploreFragment"
+        android:icon="@drawable/icon_explore"
+        android:title="@string/explore" />
+
+    <item
+        android:id="@+id/myTripsNav"
+        android:icon="@drawable/icon_trip"
+        android:title="@string/my_trips" />
+
+</menu>
