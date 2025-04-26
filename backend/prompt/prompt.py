@@ -39,3 +39,27 @@ def create_itinerary_prompt(
     out.append(f"Hotel address: {hotel_address}")
     out.append(f"Total budget allotted: {budget}")
     return "\n".join(out)
+
+# Constructs prompt to feed into GPT
+def get_itinerary_prompt(
+    location: str,
+    arrival_time: str,
+    departure_time: str,
+    hotel_address: str,
+    budget: float,
+    html_response=False,
+) -> Prompt:
+    prompt = prompt_builder()
+    prompt.set_system_prompt(
+        SystemPrompts.itinerary_freeform.value
+        if html_response
+        else SystemPrompts.itinerary.value
+    )
+
+    prompt.add_message(
+        Role.USER,
+        create_itinerary_prompt(
+            location, arrival_time, departure_time, hotel_address, budget
+        ),
+    )
+    return prompt
