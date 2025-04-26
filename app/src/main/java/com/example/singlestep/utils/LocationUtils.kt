@@ -33,3 +33,50 @@ fun getBoundingBox(centerPoint: Pair<Double, Double>, distance: Double): List<Do
     maxLatLimit = (90).degToRad()
     minLonLimit = (-180).degToRad()
     maxLonLimit = (180).degToRad()
+
+    // Earth's radius (km)
+    val r: Double = 6378.1
+
+    // Angular distance in radians on a great circle
+    val radDist: Double = distance / r
+
+    // Center point coordinates (deg)
+    val degLat: Double = centerPoint.first
+    val degLon: Double = centerPoint.second
+
+    // Center point coordinates (rad)
+    radLat = degLat.degToRad()
+    radLon = degLon.degToRad()
+
+    // Minimum and maximum latitudes for given distance
+    minLat = radLat - radDist
+    maxLat = radLat + radDist
+
+    // Define deltaLon to help determine min and max longitudes
+    deltaLon = asin(sin(radDist) / cos(radLat))
+
+    if (minLat > minLatLimit && maxLat < maxLatLimit) {
+        minLon = radLon - deltaLon
+        maxLon = radLon + deltaLon
+
+        if (minLon < minLonLimit) {
+            minLon += 2 * PI
+        }
+        if (maxLon > maxLonLimit) {
+            maxLon -= 2 * PI
+        }
+    } else {
+        // A pole is within the given distance
+        minLat = max(minLat, minLatLimit)
+        maxLat = min(maxLat, maxLatLimit)
+        minLon = minLonLimit
+        maxLon = maxLonLimit
+    }
+
+    return listOf(
+        minLat.radToDeg(),
+        minLon.radToDeg(),
+        maxLat.radToDeg(),
+        maxLon.radToDeg()
+    )
+}
