@@ -19,3 +19,23 @@ class SystemPrompts(Enum):
         The itinerary must include:
         - At least one specific restaurant recommendation for each day.
         - One hotel check-in and check-out on the first and last day."""
+    
+# Builds the dynamic portion of the prompt
+def create_itinerary_prompt(
+    location: str,
+    arrival_time: str,
+    departure_time: str,
+    hotel_address: str,
+    budget: float,
+) -> str:
+    out = [f"Trip Location: {location}"]
+    out.append(
+        "Flight arrival time: "
+        + arrival_time
+        + "\n"
+        + "Flight departure time: "
+        + departure_time
+    )
+    out.append(f"Hotel address: {hotel_address}")
+    out.append(f"Total budget allotted: {budget}")
+    return "\n".join(out)
