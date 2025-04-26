@@ -19,3 +19,22 @@ fun getSelectedDateRange(selection: Pair<Long, Long>): String {
     return "$startDateString - $endDateString"
 }
 
+fun getDateString(utc: Calendar): String {
+    val month = String.format("%02d", utc.get(Calendar.MONTH) + 1);
+    val day = String.format("%02d", utc.get(Calendar.DAY_OF_MONTH));
+    return "${utc.get(Calendar.YEAR)}/${month}/${day}"
+}
+
+fun getDaysBetween(startDateString: String, endDateString: String): Long {
+    val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+    val startDate = LocalDate.parse(startDateString, formatter)
+    val endDate = LocalDate.parse(endDateString, formatter)
+    return ChronoUnit.DAYS.between(startDate, endDate) + 1
+}
+
+fun getDateAndMonthName(dateString: String): String {
+    val parsedDate = LocalDate.parse(dateString)
+    val outputFormatter = DateTimeFormatter.ofPattern("dd MMMM", Locale.ENGLISH)
+    return parsedDate.format(outputFormatter).substring(0, 6)
+}
+
