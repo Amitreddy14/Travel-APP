@@ -15,3 +15,27 @@ fun placeToLocation(place: Place): Location {
         null, place.latLng!!.latitude, place.latLng!!.longitude, place.photoMetadatas?.first()
     )
 }
+
+fun amadeusFlightListToFlightList(flightOfferSearchList: List<FlightOfferSearch>): List<Flight> {
+    val flights: MutableList<Flight> = mutableListOf()
+    flightOfferSearchList.forEach {
+        flights.add(
+            Flight(
+                id = it.id,
+                airlineCode = it.validatingAirlineCodes?.get(0),
+                rawPrice = it.price?.grandTotal ?: 0.0,
+                totalPrice = "${it.price?.currency} ${it.price?.grandTotal?.toInt()}",
+                itineraries = amadeusItineraryListToItineraryList(it.itineraries)
+            )
+        )
+    }
+    return flights
+}
+
+fun amadeusItineraryListToItineraryList(amadeusItineraries: List<FlightOfferSearch.Itinerary>?): List<Itinerary> {
+    val itineraries: MutableList<Itinerary> = mutableListOf()
+    amadeusItineraries?.forEach { itinerary ->
+        itineraries.add(Itinerary(amadeusSegmentListToSegmentList(itinerary.segments)))
+    }
+    return itineraries
+}
