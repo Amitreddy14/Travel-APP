@@ -15,3 +15,37 @@ import com.google.android.libraries.places.api.model.PlaceTypes
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
+fun setupPlacesAutocompleteFragment(
+    fragment: AutocompleteSupportFragment,
+    hint: String,
+    placeSelectedListener: (Place) -> Unit,
+    clearButtonClickedListener: () -> Unit
+) {
+    with(fragment) {
+        setPlaceFields(
+            listOf(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG,
+                Place.Field.PHOTO_METADATAS
+            )
+        )
+        setTypesFilter(listOf(PlaceTypes.CITIES))
+        setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place) {
+                placeSelectedListener(place)
+            }
+
+            override fun onError(status: Status) {
+                Log.i("PlacesAPI", "An error occurred: $status")
+            }
+        })
+        getAutocompleteFragmentClearButton(this)?.setOnClickListener {
+            this.setText("")
+            it.visibility = View.GONE
+            clearButtonClickedListener()
+        }
+        this.setHint(hint)
+    }
+}
