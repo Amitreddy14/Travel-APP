@@ -26,3 +26,17 @@ fun saveBitmapToFile(context: Context, bitmap: Bitmap): File? {
         null
     }
 }
+
+fun loadBitmapFromFile(context: Context, filePath: String): Bitmap? {
+    return try {
+        val file = File(filePath)
+        if (file.exists()) {
+            BitmapFactory.decodeFile(filePath)
+        } else {
+            null
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
