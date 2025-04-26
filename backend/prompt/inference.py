@@ -46,3 +46,21 @@ def get_itinerary(
     if debug:
         print("GPT RESPONSE: ", resp)
     return resp
+
+# Handler to build prompt, call GPT, and create the freeform response
+def get_itinerary_freeform(
+    location: str,
+    arrival_time: str,
+    departure_time: str,
+    hotel_address: str,
+    budget: float,
+) -> Itinerary:
+    prompt = get_itinerary_prompt(
+        location, arrival_time, departure_time, hotel_address, budget, True
+    )
+    if debug:
+        print(prompt.get_prettified_str())
+    resp = client.chat.completions.create(model=MODEL, messages=prompt.get_messages())
+    if debug:
+        print("GPT RESPONSE: ", resp)
+    return resp.choices[0].message.content
