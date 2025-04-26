@@ -39,3 +39,47 @@ fun amadeusItineraryListToItineraryList(amadeusItineraries: List<FlightOfferSear
     }
     return itineraries
 }
+
+fun amadeusSegmentListToSegmentList(amadeusSegments: List<FlightOfferSearch.SearchSegment>?): List<Segment> {
+    val segments: MutableList<Segment> = mutableListOf()
+    amadeusSegments?.forEach { segment ->
+        val startTimeText = segment.departure?.at ?: "MMMM DD, YYYYTXX:XX"
+        val endTimeText = segment.arrival?.at ?: "MMMM DD, YYYYTXX:XX"
+        segments.add(
+            Segment(
+                number = segment.number,
+                startTime = getFormattedTime(
+                    startTimeText.substring(
+                        startTimeText.indexOf("T") + 1, startTimeText.length - 3
+                    )
+                ),
+                endTime = getFormattedTime(
+                    endTimeText.substring(
+                        endTimeText.indexOf("T") + 1, endTimeText.length - 3
+                    )
+                ),
+                startAirport = segment.departure?.iataCode,
+                endAirport = segment.arrival?.iataCode,
+                startDate = getDateAndMonthName(
+                    startTimeText.substring(
+                        0, startTimeText.indexOf("T")
+                    )
+                ),
+                endDate = getDateAndMonthName(
+                    endTimeText.substring(
+                        0, endTimeText.indexOf("T")
+                    )
+                ),
+                flightCode = "${segment.carrierCode} ${segment.number}",
+                duration = formatDuration(segment.duration),
+            )
+        )
+    }
+    return segments
+}
+
+fun roomTripSummaryListToTripSummaryList(roomTripSummaryList: List<RoomTripSummary>): List<TripSummary> {
+    return roomTripSummaryList.map {
+        it.toTripSummary()
+    }
+}
