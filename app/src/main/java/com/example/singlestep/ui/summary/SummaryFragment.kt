@@ -131,3 +131,50 @@ class SummaryFragment : Fragment() {
 
         }
     }
+
+    private fun onItineraryLoading() {
+        Log.d("SummaryFragment", "Loading itinerary")
+        binding.shimmerLayout.startShimmer()
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.failedSummaryLayout.visibility = View.GONE
+        binding.summaryLayout.visibility = View.GONE
+    }
+
+    private fun onItineraryLoadingSuccess(itinerary: String, tripSummary: TripSummary) {
+        Log.d("SummaryFragment", "Itinerary loaded successfully")
+        tripSummary.itinerarySummary = itinerary
+        binding.shimmerLayout.stopShimmer()
+        binding.shimmerLayout.visibility = View.GONE
+        binding.tripSummaryTextView.text =
+            Html.fromHtml(itinerary, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        if (itinerary.isBlank()) {
+            binding.failedSummaryLayout.visibility = View.VISIBLE
+            binding.summaryErrorTextView.text = getString(R.string.summary_empty_response)
+        } else {
+            binding.failedSummaryLayout.visibility = View.GONE
+            binding.summaryLayout.visibility = View.VISIBLE
+        }
+    }
+
+    private fun onItineraryLoadingFailure(result: Result.Failure, tripSummary: TripSummary) {
+        Log.e("SummaryFragment", "Error loading itinerary", result.throwable)
+        binding.shimmerLayout.stopShimmer()
+        binding.shimmerLayout.visibility = View.GONE
+        binding.summaryLayout.visibility = View.GONE
+        binding.failedSummaryLayout.visibility = View.VISIBLE
+        binding.summaryErrorTextView.text = getString(R.string.summary_failed_response)
+        checkIfConnectionRestored(tripSummary)
+    }
+
+    private fun checkIfConnectionRestored(tripSummary: TripSummary) {
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager.registerDefaultNetworkCallback(object :
+            ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                if (tripSummary.itinerarySummary.isBlank()) {
+                    viewModel.getItinerary()
+                }
+            }
+        })
+    }
