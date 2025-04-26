@@ -44,3 +44,29 @@ class Prompt:
                 return Role.USER.value, line[len(Role.USER.value + ": ") :]
             else:
                 return None, line
+            
+        def update_and_append_current_message(role, content):
+            if current_message["role"]:
+                current_message["content"] = current_message["content"].strip()
+                new_messages.append(current_message.copy())
+            current_message["role"] = role
+            current_message["content"] = content
+
+        with open(filename, "r") as f:
+            for line in f:
+                role, content = evaluate_line(line)
+                if role:
+                    update_and_append_current_message(role, content)
+                else:
+                    current_message["content"] += content
+                    continue
+
+        # Append the last message
+        if current_message["role"]:
+            new_messages.append(current_message)
+
+        self.messages = new_messages
+
+
+def prompt_builder() -> Prompt:
+    return Prompt()    
