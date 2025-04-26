@@ -55,5 +55,18 @@ fun getFormattedTime(timeString: String): String {
     return updatedString.replace(".", "").uppercase()
 }
 
-
+fun formatDuration(durationString: String?): String {
+    val duration = Duration.parse(durationString)
+    val hours = duration.toHours()
+    val minutes = duration.toMinutes() % 60
+    val formattedDuration = buildString {
+        if (hours > 0) {
+            append("${hours}h ")
+        }
+        if (minutes > 0) {
+            append("${minutes}m")
+        }
+    }
+    return formattedDuration.trim()
+}
 
