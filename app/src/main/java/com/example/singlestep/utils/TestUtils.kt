@@ -50,4 +50,17 @@ fun getSampleDestinations(): List<Location> {
             139.839478
         ),
     )
+}.
+
+fun getSampleBudgets(): List<Budget> {
+    return listOf(
+        Budget(1000),
+        Budget(5000),
+        Budget(10000),
+        Budget(15000),
+        Budget(20000),
+        Budget(50000)
+    )
 }
+
+
