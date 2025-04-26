@@ -38,3 +38,35 @@ class SummaryViewModel(
             _itineraryString.value = Result.Failure(exception)
         }
     }
+
+    fun getItinerary() {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            _itineraryString.postValue(Result.Loading)
+            try {
+                val itineraryString = assistant.getItineraryString(
+                    tripLocation = tripSummary.tripParameters.destination.city,
+                    arrivalTime = tripSummary.tripParameters.checkInDate.replace("/", "-"),
+                    departureTime = tripSummary.tripParameters.checkOutDate.replace("/", "-"),
+                    hotelAddress = tripSummary.hotel.basicPropertyData.location.address,
+                    totalBudget = tripSummary.tripParameters.remainingBudget,
+                )
+                _itineraryString.postValue(Result.Success(itineraryString))
+            } catch (e: Exception) {
+                Log.e("SummaryViewModel", "Error generating itinerary string", e)
+                _itineraryString.postValue(Result.Failure(e))
+            }
+        }
+    }
+
+    fun saveToRoomDatabase(roomTripSummary: RoomTripSummary) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.insertAll(roomTripSummary)
+        }
+    }
+
+    fun removeFromRoomDatabase(roomTripSummary: RoomTripSummary) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.delete(roomTripSummary)
+        }
+    }
+}
