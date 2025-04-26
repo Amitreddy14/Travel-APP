@@ -62,3 +62,72 @@ class SummaryFragment : Fragment() {
             }
         }
     }
+
+    private fun setupViews(
+        tripSummary: TripSummary,
+        fromMyTrips: Boolean
+    ) {
+        with(binding) {
+
+            titleTextView.text =
+                getString(R.string.trip_to, tripSummary.tripParameters.destination.city)
+
+            setupCityImage(tripSummary.tripParameters)
+
+            flightAdapter = FlightAdapter(
+                tripSummary.tripParameters.source.city,
+                tripSummary.tripParameters.destination.city,
+                tripSummary.tripParameters.guests,
+                airlineNameGetter = {
+                    tripSummary.airlineName
+                },
+                airlineICAOCodeGetter = {
+                    tripSummary.airlineICAOCode
+                },
+                clickListener = { _, _, _ ->
+                }
+            )
+            flightRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            flightRecyclerView.adapter = flightAdapter
+            flightAdapter.submitList(listOf(tripSummary.flight))
+
+            hotelAdapter = HotelAdapter(
+                tripSummary.tripParameters.checkInDate,
+                tripSummary.tripParameters.checkOutDate,
+                tripSummary.tripParameters.guests
+            ) {
+            }
+            hotelRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            hotelRecyclerView.adapter = hotelAdapter
+            hotelAdapter.submitList(listOf(tripSummary.hotel))
+
+            if (!fromMyTrips) {
+                viewModel.getItinerary()
+                saveButton.setOnClickListener {
+                    viewModel.saveToRoomDatabase(tripSummary.toRoomTripSummary())
+                    Toast.makeText(context, "Successfully added to My Trips", Toast.LENGTH_SHORT)
+                        .show()
+                    val action = SummaryFragmentDirections.actionSummaryFragmentToSearchFragment()
+                    findNavController().navigate(action)
+                }
+            } else {
+                onItineraryLoadingSuccess(tripSummary.itinerarySummary, tripSummary)
+                removeButton.visibility = View.VISIBLE
+                saveButton.visibility = View.INVISIBLE
+                saveButton.isClickable = false
+                removeButton.setOnClickListener(
+                    getRemoveTripOnClickListener(root.context) {
+                        viewModel.removeFromRoomDatabase(tripSummary.toRoomTripSummary(true))
+                        val action =
+                            SummaryFragmentDirections.actionSummaryFragmentToMyTripsFragment()
+                        findNavController().navigate(action)
+                    }
+                )
+            }
+
+            backButton.setOnClickListener {
+                activity?.onBackPressedDispatcher?.onBackPressed()
+            }
+
+        }
+    }
