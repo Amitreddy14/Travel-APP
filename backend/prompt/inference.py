@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 MODEL_3_5 = "gpt-3.5-turbo-0125"
 MODEL_4 = "gpt-4-0125-preview"
-
+    
 MODEL = MODEL_3_5
 
 # Flag to turn on debugging prints for GPT input and output
@@ -26,6 +26,7 @@ client = instructor.patch(oai_client, mode=instructor.Mode.JSON)
 
 def get_client():
     return client
+
 
 # Handler to build prompt, call GPT, and create the response
 def get_itinerary(
@@ -46,6 +47,7 @@ def get_itinerary(
     if debug:
         print("GPT RESPONSE: ", resp)
     return resp
+
 
 # Handler to build prompt, call GPT, and create the freeform response
 def get_itinerary_freeform(
