@@ -2,7 +2,7 @@
 
 ## :memo: Overview
 
-SingleStep is an AI powered trip-planning app that leverages OPEN AI's GPT3.5-Turbo model to craft personalized day-by-day trip itineraries. It also allows users to seamlessly search for flights, hotels, and nearby tourist attractions.
+Travel-APP is an AI-driven travel planning app that uses OpenAI’s GPT-3.5 Turbo model to create customized, day-by-day trip itineraries. It also lets users easily search for flights, hotels, and local attractions.
 
 <p float="left">
   <img src="images/1.jpg" width="22%" />
