@@ -1,17 +1,15 @@
-# SingleStep - AI Powered Travel Planner
+# Travel-APP - AI Powered Travel Planner
 
 ## :memo: Overview
 
 Travel-APP is an AI-driven travel planning app that uses OpenAI’s GPT-3.5 Turbo model to create customized, day-by-day trip itineraries. It also lets users easily search for flights, hotels, and local attractions.
 
 <p float="left">
-  <img src="images/1.jpg" width="22%" />
-  <img src="images/2.jpg" width="22%" />
   <img src="images/3.jpg" width="22%" />
-  <img src="images/4.jpg" width="22%" />
+  
   <img src="images/5.jpg" width="22%" />
   <img src="images/6.jpg" width="22%" />
-  <img src="images/7.jpg" width="22%" />
+  
   <img src="images/8.jpg" width="22%" />
 </p>
 
